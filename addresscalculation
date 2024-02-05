@@ -1,0 +1,63 @@
+import java.util.Scanner;
+
+public class AddressCalculation {
+public static void main(String[] args) {
+Scanner scanner = new Scanner(System.in);
+
+int base = getUserInput("Base Address (B): ", scanner);
+int weight = getUserInput("Weight (w): ", scanner);
+int dimensions = getUserInput("Number of Dimensions: ", scanner);
+
+int[] bounds = new int[dimensions];
+int[] indices = new int[dimensions];
+
+for (int i = 0; i < dimensions; i++) {
+bounds[i] = getUserInput("Upper Bound " + (i + 1) + ": ", scanner);
+indices[i] = getUserInput("Array Index " + (i + 1) + ": ", scanner);
+}
+
+scanner.close();
+
+int address = calculateAddress(base, weight, bounds, indices);
+
+System.out.println("Address: " + address);
+}
+
+public static int getUserInput(String message, Scanner scanner) {
+int input = 0;
+boolean validInput = false;
+
+while (!validInput) {
+System.out.print(message);
+
+try {
+input = Integer.parseInt(scanner.nextLine());
+
+if (input >= 0) {
+validInput = true;
+} else {
+System.out.println("Invalid Input. Please enter a non-negative integer.");
+}
+} catch (NumberFormatException e) {
+System.out.println("Invalid Input. Please enter a valid integer.");
+}
+}
+
+return input;
+}
+
+public static int calculateAddress(int base, int weight, int[] bounds, int[] indices) {
+int sum = 0;
+
+for (int i = 0; i < bounds.length; i++) {
+int temp = indices[i];
+
+for (int j = i + 1; j < bounds.length; j++) {
+temp *= bounds[j];
+}
+sum += temp;
+}
+
+return base + weight * sum;
+}
+}
