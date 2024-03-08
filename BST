@@ -1,0 +1,174 @@
+import java.util.Scanner;
+
+class Node {
+    int data;
+    Node left, right;
+
+    public Node(int item) {
+        data = item;
+        left = right = null;
+    }
+}
+
+class BinaryTree {
+    Node root;
+
+    BinaryTree() {
+        root = null;
+    }
+
+    void insert(int key) {
+        if (key == 0) {
+            System.out.println("Zero value is not accepted.");
+            return;
+        }
+        root = insertRec(root, key);
+    }
+
+    Node insertRec(Node root, int key) {
+        if (root == null) {
+            root = new Node(key);
+            return root;
+        }
+
+        if (key < root.data)
+            root.left = insertRec(root.left, key);
+        else if (key > root.data)
+            root.right = insertRec(root.right, key);
+
+        return root;
+    }
+
+    void inorder() {
+        inorderRec(root);
+    }
+
+    void inorderRec(Node root) {
+        if (root != null) {
+            inorderRec(root.left);
+            System.out.print(root.data + " ");
+            inorderRec(root.right);
+        }
+    }
+
+    void preorder() {
+        preorderRec(root);
+    }
+
+    void preorderRec(Node root) {
+        if (root != null) {
+            System.out.print(root.data + " ");
+            preorderRec(root.left);
+            preorderRec(root.right);
+        }
+    }
+
+    void postorder() {
+        postorderRec(root);
+    }
+
+    void postorderRec(Node root) {
+        if (root != null) {
+            postorderRec(root.left);
+            postorderRec(root.right);
+            System.out.print(root.data + " ");
+        }
+    }
+
+    void printArrayRepresentation() {
+        int[] array = new int[100]; // Assuming array size
+        int index = 0;
+        index = printArrayRepresentationRec(root, array, index);
+        System.out.print("Array Representation: ");
+        for (int i = 0; i < index; i++) {
+            System.out.print(array[i] + " ");
+        }
+        System.out.println();
+    }
+
+    int printArrayRepresentationRec(Node root, int[] array, int index) {
+        if (root != null) {
+            index = printArrayRepresentationRec(root.left, array, index);
+            array[index++] = root.data;
+            index = printArrayRepresentationRec(root.right, array, index);
+        }
+        return index;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        BinaryTree tree = new BinaryTree();
+        Scanner scanner = new Scanner(System.in);
+        int choice;
+
+        do {
+            System.out.println("\nBinary Search Tree Operations:");
+            System.out.println("1. Insert a node");
+            System.out.println("2. Display inorder traversal");
+            System.out.println("3. Display preorder traversal");
+            System.out.println("4. Display postorder traversal");
+            System.out.println("5. Display array representation");
+            System.out.println("6. Try again");
+            System.out.println("7. Exit");
+
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter value to insert: ");
+                    int value = scanner.nextInt();
+                    if (tree.root != null && value == 0) {
+                        System.out.println("Zero value is not accepted.");
+                    } else if (tree.root != null && search(tree.root, value)) {
+                        System.out.println("The number cannot be repeated.");
+                    } else {
+                        tree.insert(value);
+                    }
+                    break;
+                case 2:
+                    System.out.print("Inorder Traversal: ");
+                    tree.inorder();
+                    System.out.println();
+                    break;
+                case 3:
+                    System.out.print("Preorder Traversal: ");
+                    tree.preorder();
+                    System.out.println();
+                    break;
+                case 4:
+                    System.out.print("Postorder Traversal: ");
+                    tree.postorder();
+                    System.out.println();
+                    break;
+                case 5:
+                    tree.printArrayRepresentation();
+                    break;
+                case 6:
+                    tree.root = null;
+                    break;
+                case 7:
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Invalid choice!");
+            }
+        } while (choice != 7);
+    }
+
+    static boolean search(Node root, int key) {
+        if (root == null)
+            return false;
+
+        if (root.data == key)
+            return true;
+
+        boolean left = search(root.left, key);
+        if (left)
+            return true;
+
+        boolean right = search(root.right, key);
+        return right;
+    }
+}
